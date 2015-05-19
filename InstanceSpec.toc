@@ -1,0 +1,16 @@
+## Interface: 60100
+
+## Title: Instance Spec
+## Version: v1
+## Notes: Allows you to quickly change spec to match your instance role.
+## Author: Oleg "Rowaa[SR13]" Volkov
+
+## LoadOnDemand: 
+## LoadWith: 
+## Dependencies: 
+## OptionalDeps: 
+
+## SavedVariables: 
+## SavedVariablesPerCharacter: 
+
+InstanceSpec.lua
