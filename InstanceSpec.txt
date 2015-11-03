@@ -1,9 +1,12 @@
-Instance Spec, v1
+Instance Spec, v2
 
 * http://www.curse.com/addons/wow/instance-spec
 
 Are you tired of forgetting to change spec to your assigned role before entering? This addon will add a button below dungeon ready dialog that will allow you to quickly switch to your other spec if you need it to match your assigned role.
 
 == Change log ==
+2015-11-03 v2
+* Added "equipment manager" shortcut button to spec switch.
+
 2015-05-19 v1
 * Initial implementation.
