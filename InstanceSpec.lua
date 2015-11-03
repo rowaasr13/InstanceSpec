@@ -12,7 +12,7 @@ dungeon_ready_switch_spec_button:SetScript("OnClick", function()
    if not proposalExists then return end
 
    local current_spec = GetSpecialization()
-   local spec_role = GetSpecializationRole(current_spec)   
+   local spec_role = GetSpecializationRole(current_spec)
 
    if role ~= spec_role and not InCombatLockdown() then
       local other_spec_group = 3 - GetActiveSpecGroup(false)
@@ -37,7 +37,7 @@ local function UpdateButton()
    if not proposalExists then return end
 
    local current_spec = GetSpecialization()
-   local spec_role = GetSpecializationRole(current_spec)   
+   local spec_role = GetSpecializationRole(current_spec)
 
    if role == spec_role then
       if is_shown then
@@ -79,7 +79,7 @@ local function UpdateButton()
          dungeon_ready_switch_spec_button:Enable()
          is_disabled = false
       end
-   end   
+   end
 
    local text = role_icon[other_spec_role] .. "|T" .. icon .. ":0|t" .. name .. " - " .. TALENT_SPEC_ACTIVATE
    if text ~= prev_text then
