@@ -4,7 +4,6 @@ local prev_width = 115
 local is_shown = true
 local is_disabled = false
 dungeon_ready_switch_spec_button:SetText(prev_text)
-dungeon_ready_switch_spec_button:SetWidth(prev_width)
 dungeon_ready_switch_spec_button:SetHeight(25)
 dungeon_ready_switch_spec_button:SetPoint("BOTTOM", LFGDungeonReadyDialog, "BOTTOM", 0, -46) -- -42, below BigWigs dungeon timer, 3 - below standard buttons, 45 - above standard buttons, 120 - above spec image, check if it collides with number of killed bosses
 dungeon_ready_switch_spec_button:SetScript("OnClick", function()
@@ -24,6 +23,20 @@ dungeon_ready_switch_spec_button:SetScript("OnClick", function()
       end
    end
 end)
+
+local equipment_manager_button = CreateFrame("Button", nil, dungeon_ready_switch_spec_button, "UIPanelButtonTemplate")
+equipment_manager_button:SetText(EQUIPMENT_MANAGER)
+local em_text_width = equipment_manager_button:GetTextWidth() + 30
+if prev_width < em_text_width then em_text_width = prev_width end
+equipment_manager_button:SetHeight(25)
+equipment_manager_button:SetPoint("TOP", dungeon_ready_switch_spec_button, "BOTTOM", 0, 0)
+equipment_manager_button:SetScript("OnClick", function()
+   ToggleCharacter("PaperDollFrame", true)
+   PaperDollFrame_SetSidebar(PaperDollFrame, 3)
+end)
+
+dungeon_ready_switch_spec_button:SetWidth(prev_width)
+equipment_manager_button:SetWidth(em_text_width)
 
 local role_icon = {
    TANK    = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:20:20:0:0:64:64:0:19:21:40|t",
@@ -89,6 +102,7 @@ local function UpdateButton()
       if text_width_and_pad > prev_width then
          -- print("updating width")
          dungeon_ready_switch_spec_button:SetWidth(text_width_and_pad)
+         equipment_manager_button:SetWidth(text_width_and_pad)
          prev_width = text_width_and_pad
       end
       prev_text = text
