@@ -50,7 +50,10 @@ local function UpdateButton()
    if not proposalExists then return end
 
    local current_spec = GetSpecialization()
-   local spec_role = GetSpecializationRole(current_spec)
+   local spec_role
+   if current_spec then
+      spec_role = GetSpecializationRole(current_spec)
+   end
 
    if role == spec_role then
       if is_shown then
@@ -67,7 +70,10 @@ local function UpdateButton()
 
    local other_spec_group = 3 - GetActiveSpecGroup(false)
    local other_spec = GetSpecialization(false, false, other_spec_group)
-   local id, name, description, icon, background, other_spec_role, primaryStat = GetSpecializationInfo(other_spec)
+   local id, name, description, icon, background, other_spec_role, primaryStat
+   if other_spec then
+      id, name, description, icon, background, other_spec_role, primaryStat = GetSpecializationInfo(other_spec)
+   end
 
    if other_spec_role ~= role then
       if is_shown then
