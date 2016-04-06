@@ -1,7 +1,7 @@
 ## Interface: 60200
 
 ## Title: Instance Spec
-## Version: v2
+## Version: v3
 ## Notes: Allows you to quickly change spec to match your instance role.
 ## Author: Oleg "Rowaa[SR13]" Volkov
 
