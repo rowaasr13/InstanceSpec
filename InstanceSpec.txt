@@ -1,10 +1,15 @@
-Instance Spec, v3
+Instance Spec, v4
 
 * http://www.curse.com/addons/wow/instance-spec
 
-Are you tired of forgetting to change spec to your assigned role before entering? This addon will add a button below dungeon ready dialog that will allow you to quickly switch to your other spec if you need it to match your assigned role.
+Does nothing in Legion for now. If spec switching returns, it will automatically resume previous functionality.
+
+Before Legion this addon used to add a button below dungeon ready dialog that would allow you to quickly switch to your other spec if you need it to match your assigned role.
 
 == Change log ==
+2016-07-24 v4
+* Disable itself if there's no spec group switching available (i.e. in Legion).
+
 2016-04-07 v3
 * Fix errors when player have no spec (e.g. no 2nd spec before level 30).
 

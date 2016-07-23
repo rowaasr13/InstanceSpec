@@ -1,7 +1,7 @@
-## Interface: 60200
+## Interface: 70000
 
 ## Title: Instance Spec
-## Version: v3
+## Version: v4
 ## Notes: Allows you to quickly change spec to match your instance role.
 ## Author: Oleg "Rowaa[SR13]" Volkov
 
