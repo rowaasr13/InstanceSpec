@@ -1,3 +1,7 @@
+local _, player_class = UnitClass("player")
+
+-- /click PaperDollSidebarTab3
+
 local dungeon_ready_switch_spec_button = CreateFrame("Button", nil, LFGDungeonReadyDialog, "UIPanelButtonTemplate")
 local prev_text = TALENT_SPEC_ACTIVATE
 local prev_width = 115
