@@ -1,3 +1,5 @@
+if not SetActiveSpecGroup then return end
+
 local _, player_class = UnitClass("player")
 
 -- /click PaperDollSidebarTab3
