@@ -1,7 +1,7 @@
 ## Interface: 70000
 
 ## Title: Instance Spec
-## Version: v4
+## Version: v5
 ## Notes: Allows you to quickly change spec to match your instance role.
 ## Author: Oleg "Rowaa[SR13]" Volkov
 
@@ -13,4 +13,5 @@
 ## SavedVariables: 
 ## SavedVariablesPerCharacter: 
 
+WidgetProxy.lua
 InstanceSpec.lua

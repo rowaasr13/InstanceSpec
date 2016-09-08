@@ -1,12 +1,16 @@
-Instance Spec, v4
+Instance Spec, v5
 
 * http://www.curse.com/addons/wow/instance-spec
 
-Does nothing in Legion for now. If spec switching returns, it will automatically resume previous functionality.
-
-Before Legion this addon used to add a button below dungeon ready dialog that would allow you to quickly switch to your other spec if you need it to match your assigned role.
+Are you tired of forgetting to change spec to your assigned role before entering? This addon will add buttons below "dungeon ready" dialog that would allow you to quickly switch to other spec that matches your assigned role.
 
 == Change log ==
+2016-09-08 v5
+Instead of talent/spec group switching you can now just switch directly to any specialization and despite what I vaguely remember being promised by Blizzard, you're NOT put into correct spec automatically when you queue as role that do not match you current spec - so InstanceSpec HAVE work to do after all!
+* Update to Legion API.
+* Allow more buttons for classes that have several specs for role.
+* Do not load for classes that don't have more than one role.
+
 2016-07-24 v4
 * Disable itself if there's no spec group switching available (i.e. in Legion).
 
