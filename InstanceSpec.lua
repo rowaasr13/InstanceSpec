@@ -1,48 +1,58 @@
 if not SetActiveSpecGroup then return end
 
-local _, player_class = UnitClass("player")
+local num_specs
 
--- /click PaperDollSidebarTab3
+local BUTTON     = 1
+local WIDTH      = 2
+local TEXT_WIDTH = 3
+local TEXT       = 4
+local HIDDEN     = 5
+local DISABLED   = 6
+local SPEC       = 7
 
-local dungeon_ready_switch_spec_button = CreateFrame("Button", nil, LFGDungeonReadyDialog, "UIPanelButtonTemplate")
-local prev_text = TALENT_SPEC_ACTIVATE
-local prev_width = 115
-local is_shown = true
-local is_disabled = false
-dungeon_ready_switch_spec_button:SetText(prev_text)
-dungeon_ready_switch_spec_button:SetHeight(25)
-dungeon_ready_switch_spec_button:SetPoint("BOTTOM", LFGDungeonReadyDialog, "BOTTOM", 0, -46) -- -42, below BigWigs dungeon timer, 3 - below standard buttons, 45 - above standard buttons, 120 - above spec image, check if it collides with number of killed bosses
-dungeon_ready_switch_spec_button:SetScript("OnClick", function()
-   local proposalExists, id, typeID, subtypeID, name, texture, role, hasResponded, totalEncounters, completedEncounters, numMembers, isLeader = GetLFGProposal()
-   if not proposalExists then return end
+local token = {}
 
-   local current_spec = GetSpecialization()
-   local spec_role = GetSpecializationRole(current_spec)
+local max_spec_buttons = 2
+local em_button_idx = max_spec_buttons + 1
 
-   if role ~= spec_role and not InCombatLockdown() then
-      local other_spec_group = 3 - GetActiveSpecGroup(false)
-      local other_spec = GetSpecialization(false, false, other_spec_group)
-      local other_spec_role = GetSpecializationRole(other_spec)
+local function SpecButtonOnClick(self)
+   SetSpecialization(self[token][SPEC])
+end
 
-      if other_spec_role == role then
-         SetActiveSpecGroup(other_spec_group)
+local state = {}
+local function CreateButtons()
+   local prev
+   for idx = 1, max_spec_buttons do
+      local button = CreateFrame("Button", nil, LFGDungeonReadyDialog, "UIPanelButtonTemplate")
+      state[idx] = { [BUTTON] = button, [WIDTH] = 0 }
+      button[token] = state[idx]
+      button:SetText(TALENT_SPEC_ACTIVATE)
+      button:SetWidth(115)
+      button:SetHeight(25)
+      if prev then
+         button:SetPoint("TOP", prev, "BOTTOM", 0, 0)
+      else
+         -- -42, below BigWigs dungeon timer, 3 - below standard buttons, 45 - above standard buttons, 120 - above spec image, check if it collides with number of killed bosses
+         button:SetPoint("BOTTOM", LFGDungeonReadyDialog, "BOTTOM", 0, -46)
       end
+      button:SetScript("OnClick", SpecButtonOnClick)
+      prev = button
    end
-end)
 
-local equipment_manager_button = CreateFrame("Button", nil, dungeon_ready_switch_spec_button, "UIPanelButtonTemplate")
-equipment_manager_button:SetText(EQUIPMENT_MANAGER)
-local em_text_width = equipment_manager_button:GetTextWidth() + 30
-if prev_width < em_text_width then em_text_width = prev_width end
-equipment_manager_button:SetHeight(25)
-equipment_manager_button:SetPoint("TOP", dungeon_ready_switch_spec_button, "BOTTOM", 0, 0)
-equipment_manager_button:SetScript("OnClick", function()
-   ToggleCharacter("PaperDollFrame", true)
-   PaperDollFrame_SetSidebar(PaperDollFrame, 3)
-end)
+   local em_button = CreateFrame("Button", nil, state[1][BUTTON], "UIPanelButtonTemplate")
+   em_button:SetText(EQUIPMENT_MANAGER)
+   em_button:SetHeight(25)
+   em_button:SetPoint("TOP", prev, "BOTTOM", 0, 0)
+   em_button:SetScript("OnClick", function()
+      ToggleCharacter("PaperDollFrame", true)
+      PaperDollFrame_SetSidebar(PaperDollFrame, 3)
+   end)
+   state[em_button_idx] = { [BUTTON] = em_button, [WIDTH] = 0, [TEXT_WIDTH] = em_button:GetTextWidth() }
 
-dungeon_ready_switch_spec_button:SetWidth(prev_width)
-equipment_manager_button:SetWidth(em_text_width)
+   -- Looks more aesthetically pleasing to me. Should work with up to 3 buttons.
+   state[1], state[max_spec_buttons] = state[max_spec_buttons], state[1]
+end
+CreateButtons()
 
 local role_icon = {
    TANK    = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:20:20:0:0:64:64:0:19:21:40|t",
@@ -55,69 +65,102 @@ local function UpdateButton()
    local proposalExists, id, typeID, subtypeID, name, texture, role, hasResponded, totalEncounters, completedEncounters, numMembers, isLeader = GetLFGProposal()
    if not proposalExists then return end
 
+   if not num_specs or num_specs == 0 then
+      num_specs = GetNumSpecializations()
+   end
+
    local current_spec = GetSpecialization()
+   -- print("need role", role, "num_specs", num_specs)
    local spec_role
    if current_spec then
       spec_role = GetSpecializationRole(current_spec)
    end
 
    if role == spec_role then
-      if is_shown then
-         dungeon_ready_switch_spec_button:Hide()
-         is_shown = false
+      for idx = 1, max_spec_buttons do
+         local button_state = state[idx]
+         if not button_state[HIDDEN] then
+            button_state[BUTTON]:Hide()
+            button_state[HIDDEN] = true
+         end
       end
       return
-   else
-      if not is_shown then
-         dungeon_ready_switch_spec_button:Show()
-         is_shown = true
-      end
    end
 
-   local other_spec_group = 3 - GetActiveSpecGroup(false)
-   local other_spec = GetSpecialization(false, false, other_spec_group)
-   local id, name, description, icon, background, other_spec_role, primaryStat
-   if other_spec then
-      id, name, description, icon, background, other_spec_role, primaryStat = GetSpecializationInfo(other_spec)
+   -- Find suitable specs and write their text/data to buttons
+   local need_recalculate_width
+   local button_idx = 0
+   for spec_idx = num_specs, 1, -1 do
+      if spec_idx ~= current_spec then
+         local id, name, description, icon, background, other_spec_role, primaryStat = GetSpecializationInfo(spec_idx)
+         -- print("other_spec", spec_idx, "role", other_spec_role)
+         if other_spec_role == role then
+            -- Found other spec suitable for incoming LFG proposal
+            button_idx = button_idx + 1
+            local button_state = state[button_idx]
+            local text = role_icon[other_spec_role] .. "|T" .. icon .. ":0|t" .. name -- .. " - " .. TALENT_SPEC_ACTIVATE
+            if button_state[TEXT] ~= text then
+               button_state[BUTTON]:SetText(text)
+               button_state[TEXT_WIDTH] = nil
+               need_recalculate_width = true
+            end
+            button_state[SPEC] = spec_idx
+         end
+      end
+      if button_idx == max_spec_buttons then break end
    end
 
-   if other_spec_role ~= role then
-      if is_shown then
-         dungeon_ready_switch_spec_button:Hide()
-         is_shown = false
-      end
-      return
-   else
-      if not is_shown then
-         dungeon_ready_switch_spec_button:Show()
-         is_shown = true
-      end
-   end
-
-   if InCombatLockdown() then
-      if not is_disabled then
-         dungeon_ready_switch_spec_button:Disable()
-         is_disabled = true
-      end
-   else
-      if is_disabled then
-         dungeon_ready_switch_spec_button:Enable()
-         is_disabled = false
+   local max_text_width = state[em_button_idx][TEXT_WIDTH]
+   -- Hide inactive / find max text width
+   for idx = max_spec_buttons, 1, -1 do
+      local button_state = state[idx]
+      if idx > button_idx then
+         -- Inactive button, hide it
+         if not button_state[HIDDEN] then
+            button_state[BUTTON]:Hide()
+            button_state[HIDDEN] = true
+         end
+      else
+         local text_width = button_state[TEXT_WIDTH]
+         if not text_width then
+            text_width = button_state[BUTTON]:GetTextWidth()
+            button_state[TEXT_WIDTH] = text_width
+         end
+         if max_text_width < text_width then max_text_width = text_width end
       end
    end
+   max_text_width = max_text_width + 30
 
-   local text = role_icon[other_spec_role] .. "|T" .. icon .. ":0|t" .. name .. " - " .. TALENT_SPEC_ACTIVATE
-   if text ~= prev_text then
-      -- print("updating text")
-      dungeon_ready_switch_spec_button:SetText(text)
-      local text_width_and_pad = dungeon_ready_switch_spec_button:GetTextWidth() + 30
-      if text_width_and_pad > prev_width then
-         -- print("updating width")
-         dungeon_ready_switch_spec_button:SetWidth(text_width_and_pad)
-         equipment_manager_button:SetWidth(text_width_and_pad)
-         prev_width = text_width_and_pad
+   -- Set button width
+   -- Enable/disable
+   -- Show buttons
+   local combat_lockdown = InCombatLockdown()
+   for idx = 1, em_button_idx do
+      local button_state = state[idx]
+      local button = button_state[BUTTON]
+      if idx <= button_idx or idx == em_button_idx then
+         if button[WIDTH] ~= max_text_width then
+            button:SetWidth(max_text_width)
+            button[WIDTH] = max_text_width
+         end
+         if idx ~= em_button_idx then
+            if combat_lockdown then
+               if not button_state[DISABLED] then
+                  button:Disable()
+                  button_state[DISABLED] = true
+               end
+            else
+               if button_state[DISABLED] then
+                  button:Enable()
+                  button_state[DISABLED] = nil
+               end
+            end
+         end
+         if button_state[HIDDEN] then
+            button_state[BUTTON]:Show()
+            button_state[HIDDEN] = nil
+         end
       end
-      prev_text = text
    end
 end
 
