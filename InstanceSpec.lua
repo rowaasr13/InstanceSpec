@@ -1,4 +1,6 @@
-if not SetActiveSpecGroup then return end
+-- Do not load at all when player have less than two roles
+local tank, healer, damager = UnitGetAvailableRoles("player")
+if (tank and 1 or 0) + (healer and 1 or 0) + (damager and 1 or 0) < 2 then return end
 
 local num_specs
 
