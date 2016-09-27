@@ -41,7 +41,7 @@ local function CreateButtons()
       prev = button
    end
 
-   local em_button = CreateFrame("Button", nil, state[1][BUTTON], "UIPanelButtonTemplate")
+   local em_button = CreateFrame("Button", nil, state[max_spec_buttons][BUTTON], "UIPanelButtonTemplate")
    em_button:SetText(EQUIPMENT_MANAGER)
    em_button:SetHeight(25)
    em_button:SetPoint("TOP", prev, "BOTTOM", 0, 0)
@@ -165,8 +165,6 @@ local function UpdateButton()
       end
    end
 end
-
-ISB = dungeon_ready_switch_spec_button
 
 local event_watcher = CreateFrame("Frame", nil, LFGDungeonReadyDialog)
 local event_watcher_working = false
