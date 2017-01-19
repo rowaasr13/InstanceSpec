@@ -94,7 +94,7 @@ local function UpdateButton()
    local button_idx = 0
    for spec_idx = num_specs, 1, -1 do
       if spec_idx ~= current_spec then
-         local id, name, description, icon, background, other_spec_role, primaryStat = GetSpecializationInfo(spec_idx)
+         local id, name, description, icon, other_spec_role = GetSpecializationInfo(spec_idx)
          -- print("other_spec", spec_idx, "role", other_spec_role)
          if other_spec_role == role then
             -- Found other spec suitable for incoming LFG proposal
