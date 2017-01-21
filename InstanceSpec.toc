@@ -1,7 +1,7 @@
 ## Interface: 70100
 
 ## Title: Instance Spec
-## Version: v6
+## Version: v7
 ## Notes: Allows you to quickly change spec to match your instance role.
 ## Author: Oleg "Rowaa[SR13]" Volkov
 

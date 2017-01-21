@@ -1,10 +1,13 @@
-Instance Spec, v6
+Instance Spec, v7
 
 * http://www.curse.com/addons/wow/instance-spec
 
 Are you tired of forgetting to change spec to your assigned role before entering? This addon will add buttons below "dungeon ready" dialog that would allow you to quickly switch to other spec that matches your assigned role.
 
 ## Change log
+
+### 2017-01-21 v7
+* 7.1.5 API update.
 
 ### 2016-09-27 v6
 * Fix Equipment Manager button being hidden when you have only one spec to switch - i.e. pretty much for everyone except priest with 2 healing specs.
