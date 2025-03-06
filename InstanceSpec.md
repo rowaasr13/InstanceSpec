@@ -1,10 +1,13 @@
-Instance Spec, v7
+Instance Spec, v8
 
 * http://www.curse.com/addons/wow/instance-spec
 
 Are you tired of forgetting to change spec to your assigned role before entering? This addon will add buttons below "dungeon ready" dialog that would allow you to quickly switch to other spec that matches your assigned role.
 
 ## Change log
+
+### 2025-02-28 v8
+* 11.1.0 API update.
 
 ### 2017-01-21 v7
 * 7.1.5 API update.
