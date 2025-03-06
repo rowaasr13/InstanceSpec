@@ -2,6 +2,8 @@
 local tank, healer, damager = UnitGetAvailableRoles("player")
 if (tank and 1 or 0) + (healer and 1 or 0) + (damager and 1 or 0) < 2 then return end
 
+local SetSpecialization = C_SpecializationInfo.SetSpecialization or SetSpecialization -- not exact match, but in this addon I don't use second "pet" parameter
+
 local num_specs
 
 local BUTTON     = 1
